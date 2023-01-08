@@ -22,14 +22,10 @@ module TopPop
     end
 
     def update_trips
-      @update_trips = []
-      @queue.poll do |code|
-        puts code
-        unless @update_trips.include? code
-          http_response = HTTP.put("#{@config.API_HOST}/api/trips/#{code}/update")
-          @update_trips.append(code) if http_response.status.success?
-          puts "Update TripQuery: #{code} failed" unless http_response.status.success?
-        end
+      @queue.videos do |video|
+        http_response = HTTP.put("#{@config.API_HOST}/api/v1/add/#{video}")
+        @update_trips.append(code) if http_response.status.success?
+        puts "Update Video: #{code} failed" unless http_response.status.success?
       end
       @update_trips
     end
